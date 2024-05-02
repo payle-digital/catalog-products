@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id String @id
+  object String @default("product")
+  active Boolean @default(true)
+  accountId String @map("account_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  description String?
+  images String[]
+  features String[]
+  name String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  prices Price[]
+
+  @@map("products")
+}
+
+model Price {
+  id String @id
+  object String @default("price")
+  active Boolean @default(true)
+  accountId String @map("account_id")
+  billingScheme BillingScheme @map("billing_scheme")
+  createdAt DateTime @default(now()) @map("created_at")
+  currency Currency
+  type PriceType
+  unitAmount Int? @map("unit_amount")
+  recurring Json
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String @map("product_id")
+
+  @@map("prices")
+}
+
+enum BillingScheme {
+  per_unit
+  tiered
+}
+
+enum PriceType {
+  one_time
+  recurring
+}
+
+enum Currency {
+  usd
+  brl
+  eur
+}
