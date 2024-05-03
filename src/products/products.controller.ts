@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
+import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductListResponse } from './interfaces/product.interface';
 import { ProductsService } from './products.service';
@@ -23,11 +24,8 @@ export class ProductsController {
   }
 
   @Get()
-  async findAll(
-    @Query('starting_after') startingAfter: string,
-    @Query('limit') limit: string,
-  ): Promise<ProductListResponse> {
-    return await this.productsService.findAll(startingAfter, +limit);
+  async findAll(@Query() query: QueryProductDto): Promise<ProductListResponse> {
+    return await this.productsService.findAll(query);
   }
 
   @Get(':id')

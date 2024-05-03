@@ -12,4 +12,5 @@ export interface FindManyProductQuery {
   skip?: number;
   cursor?: Prisma.ProductWhereUniqueInput;
   orderBy?: Prisma.ProductOrderByWithRelationInput;
+  include?: Prisma.ProductInclude;
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { generateRandomId } from 'src/utils/generateRandomId';
 import { CreateProductDto } from './dto/create-product.dto';
+import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import {
   FindManyProductQuery,
@@ -25,14 +26,16 @@ export class ProductsService {
     return product;
   }
 
-  async findAll(
-    startingAfter?: string,
-    limit = 10,
-  ): Promise<ProductListResponse> {
+  async findAll(queryDto: QueryProductDto): Promise<ProductListResponse> {
+    const { expand, startingAfter, limit = 10 } = queryDto;
+
     const query: FindManyProductQuery = {
       take: limit + 1,
       orderBy: {
         createdAt: 'desc',
+      },
+      include: {
+        prices: expand?.includes('prices') || false,
       },
     };
 
