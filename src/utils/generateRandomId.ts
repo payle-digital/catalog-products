@@ -1,4 +1,4 @@
-function generateRandomId(length: number): string {
+export function generateRandomId(length: number): string {
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
