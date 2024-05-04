@@ -62,6 +62,7 @@ export class ProductsService {
   async findOne(id: string) {
     const product = await this.prismaService.product.findFirst({
       where: { id },
+      include: { prices: true },
     });
 
     return product;
