@@ -8,23 +8,24 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductListResponse } from './interfaces/product.interface';
 import { ProductsService } from './products.service';
+import Payle from 'payle';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  create(@Body() createProductDto: Payle.ProductCreateParams) {
     return this.productsService.create(createProductDto);
   }
 
   @Get()
-  async findAll(@Query() query: QueryProductDto): Promise<ProductListResponse> {
+  async findAll(
+    @Query() query: Payle.ProductListParams,
+  ): Promise<ProductListResponse> {
     return await this.productsService.findAll(query);
   }
 
