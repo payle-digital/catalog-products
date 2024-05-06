@@ -5,13 +5,13 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Product {
   id String @id
   object String @default("product")
   active Boolean @default(true)
-  accountId String @map("account_id")
   createdAt DateTime @default(now()) @map("created_at")
   description String?
   images String[]
@@ -21,6 +21,10 @@ model Product {
 
   prices Price[]
 
+  storeId String @map("store_id")
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId])
   @@map("products")
 }
 
@@ -28,7 +32,6 @@ model Price {
   id String @id
   object String @default("price")
   active Boolean @default(true)
-  accountId String @map("account_id")
   billingScheme BillingScheme @map("billing_scheme")
   createdAt DateTime @default(now()) @map("created_at")
   currency Currency
@@ -39,6 +42,10 @@ model Price {
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String @map("product_id")
 
+  storeId String @map("store_id")
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([productId, storeId])
   @@map("prices")
 }
 
@@ -56,4 +63,14 @@ enum Currency {
   usd
   brl
   eur
+}
+
+model Store {
+  id String @id
+  apiKey String @unique
+
+  products Product[]
+  prices Price[]
+
+  @@map("stores")
 }

@@ -8,17 +8,16 @@ import {
   FindManyProductQuery,
   ProductListResponse,
 } from './interfaces/product.interface';
-import Payle from 'payle';
 
 @Injectable()
 export class ProductsService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createProductDto: Payle.ProductCreateParams) {
+  async create(createProductDto: CreateProductDto) {
     const product = await this.prismaService.product.create({
       data: {
         id: `prod_${generateRandomId(14)}`,
-        accountId: '',
+        storeId: '',
         ...createProductDto,
       },
     });

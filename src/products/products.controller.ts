@@ -11,20 +11,20 @@ import {
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductListResponse } from './interfaces/product.interface';
 import { ProductsService } from './products.service';
-import Payle from 'payle';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: Payle.ProductCreateParams) {
+  create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
   @Get()
   async findAll(
-    @Query() query: Payle.ProductListParams,
+    @Query() query: any,
   ): Promise<ProductListResponse> {
     return await this.productsService.findAll(query);
   }

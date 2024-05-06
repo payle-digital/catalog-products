@@ -12,7 +12,7 @@ export class PricesService {
     const price = await this.prismaService.price.create({
       data: {
         id: `price_${generateRandomId(14)}`,
-        accountId: '',
+        storeId: '',
         ...createPriceDto,
         recurring: JSON.stringify(createPriceDto.recurring),
       },
