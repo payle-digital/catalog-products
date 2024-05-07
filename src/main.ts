@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,15 +14,16 @@ async function bootstrap() {
         ssl: true,
         sasl: {
           mechanism: 'scram-sha-256',
-          username: 'dW5pdGVkLWNveW90ZS05NTI2JGE_fi8cQrfzZ9gksJkx07ns7wsJvgId7A2V5uw',
-          password: 'Y2YxODZlODItOTM5MC00YjEwLTkzYmItNWIyOTBjZWEyNzM5'
-        }
+          username:
+            'dW5pdGVkLWNveW90ZS05NTI2JGE_fi8cQrfzZ9gksJkx07ns7wsJvgId7A2V5uw',
+          password: 'Y2YxODZlODItOTM5MC00YjEwLTkzYmItNWIyOTBjZWEyNzM5',
+        },
       },
       consumer: {
-        groupId: 'catalog-products-consumer'
-      }
-    }
-  })
+        groupId: 'catalog-products-consumer',
+      },
+    },
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -33,7 +34,7 @@ async function bootstrap() {
     }),
   );
 
-  await app.startAllMicroservices()
+  await app.startAllMicroservices();
   await app.listen(3001);
 }
 bootstrap();
