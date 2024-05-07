@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { generateRandomId } from 'src/utils/generateRandomId';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -25,10 +25,20 @@ export class ProductsService {
     return product;
   }
 
-  async findAll(queryDto: QueryProductDto): Promise<ProductListResponse> {
+  async findAll(
+    queryDto: QueryProductDto,
+    apiKey: string,
+  ): Promise<ProductListResponse> {
+    const store = await this.prismaService.store.findFirst({
+      where: { apiKey },
+    });
+
+    if (!store) new NotFoundException();
+
     const { expand, startingAfter, limit = 10 } = queryDto;
 
     const query: FindManyProductQuery = {
+      where: { storeId: store.id },
       take: limit + 1,
       orderBy: {
         createdAt: 'desc',
