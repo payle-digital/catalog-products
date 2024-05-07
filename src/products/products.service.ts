@@ -13,11 +13,17 @@ import {
 export class ProductsService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, apiKey: string) {
+    const store = await this.prismaService.store.findFirst({
+      where: { apiKey },
+    });
+
+    if (!store) new NotFoundException();
+
     const product = await this.prismaService.product.create({
       data: {
         id: `prod_${generateRandomId(14)}`,
-        storeId: '',
+        storeId: store.id,
         ...createProductDto,
       },
     });

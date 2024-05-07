@@ -19,8 +19,11 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  create(
+    @Body() createProductDto: CreateProductDto,
+    @Request() req: any) {
+    const apiKey = req.headers['secret_key'];
+    return this.productsService.create(createProductDto, apiKey);
   }
 
   @Get()
@@ -28,7 +31,7 @@ export class ProductsController {
     @Query() query: any,
     @Request() req: any,
   ): Promise<ProductListResponse> {
-    const apiKey = req.headers['authorization'].split(' ')[1];
+    const apiKey = req.headers['secret_key'];
     return await this.productsService.findAll(query, apiKey);
   }
 
