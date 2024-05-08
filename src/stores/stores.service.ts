@@ -3,13 +3,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class StoresService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(storeId: string, apiKey: string) {
-    await this.prismaService.store.create({
+  async create(storeId: string) {
+    const store = await this.prisma.store.findFirst({ where: { id: storeId } });
+    if (store) return;
+    await this.prisma.store.create({
       data: {
         id: storeId,
-        apiKey,
       },
     });
   }

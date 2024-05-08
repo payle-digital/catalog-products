@@ -25,7 +25,7 @@ export class CreatePriceDto {
   @IsJSON()
   recurring?: any;
 
-  @ValidateIf((o) => o.billingScheme !== BillingScheme.tiered)
+  @ValidateIf((o) => o.billingScheme === BillingScheme.per_unit)
   @IsInt()
   @Min(0)
   unitAmount?: number;

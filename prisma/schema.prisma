@@ -16,6 +16,7 @@ model Product {
   description String?
   images String[]
   features String[]
+  livemode Boolean
   name String
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -46,12 +47,13 @@ model Price {
   store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   @@index([productId, storeId])
+  @@index([storeId])
+  @@index([productId])
   @@map("prices")
 }
 
 enum BillingScheme {
   per_unit
-  tiered
 }
 
 enum PriceType {
@@ -60,17 +62,35 @@ enum PriceType {
 }
 
 enum Currency {
-  usd
-  brl
-  eur
+  USD
+  BRL
+  EUR
 }
 
 model Store {
   id String @id
-  apiKey String @unique
 
-  products Product[]
-  prices Price[]
+  apiKeys ApiKey[]
+  product Product[]
+  price Price[]
 
   @@map("stores")
+}
+
+model ApiKey {
+  id String @id
+  key String @unique
+  environment environmentKey
+  expireAt DateTime
+
+  storeId String @map("store_id")
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId])
+  @@map("api_keys")
+}
+
+enum environmentKey {
+  live
+  test
 }

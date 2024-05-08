@@ -14,4 +14,5 @@ export interface FindManyProductQuery {
   orderBy?: Prisma.ProductOrderByWithRelationInput;
   include?: Prisma.ProductInclude;
   where?: Prisma.ProductWhereInput;
+  select?: Prisma.ProductSelect;
 }

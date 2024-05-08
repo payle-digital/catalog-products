@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { generateRandomId } from 'src/utils/generateRandomId';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -13,18 +13,28 @@ import {
 export class ProductsService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createProductDto: CreateProductDto, apiKey: string) {
-    const store = await this.prismaService.store.findFirst({
-      where: { apiKey },
-    });
-
-    if (!store) new NotFoundException();
-
+  async create(
+    createProductDto: CreateProductDto,
+    storeDetails: { storeId: string; livemode: boolean },
+  ) {
     const product = await this.prismaService.product.create({
       data: {
         id: `prod_${generateRandomId(14)}`,
-        storeId: store.id,
+        livemode: storeDetails.livemode,
         ...createProductDto,
+        prices: {
+          create: {
+            id: `price_${generateRandomId(14)}`,
+            billingScheme: createProductDto.default_price_data.billingScheme,
+            currency: createProductDto.default_price_data.currency,
+            recurring: createProductDto.default_price_data.recurring,
+            type: createProductDto.default_price_data.type,
+            store: { connect: { id: storeDetails.storeId } },
+          },
+        },
+        store: {
+          connect: { id: storeDetails.storeId },
+        },
       },
     });
 
@@ -33,19 +43,18 @@ export class ProductsService {
 
   async findAll(
     queryDto: QueryProductDto,
-    apiKey: string,
+    storeDetails: { storeId: string; livemode: boolean },
   ): Promise<ProductListResponse> {
-    const store = await this.prismaService.store.findFirst({
-      where: { apiKey },
-    });
-
-    if (!store) new NotFoundException();
-
     const { expand, startingAfter, limit = 10 } = queryDto;
 
     const query: FindManyProductQuery = {
-      where: { storeId: store.id },
-      take: limit + 1,
+      where: {
+        AND: [
+          { storeId: storeDetails.storeId },
+          { livemode: storeDetails.livemode },
+        ],
+      },
+      take: +limit + 1,
       orderBy: {
         createdAt: 'desc',
       },
@@ -74,9 +83,18 @@ export class ProductsService {
     };
   }
 
-  async findOne(id: string) {
+  async findOne(
+    id: string,
+    storeDetails: { storeId: string; livemode: boolean },
+  ) {
     const product = await this.prismaService.product.findFirst({
-      where: { id },
+      where: {
+        AND: [
+          { id },
+          { livemode: storeDetails.livemode },
+          { storeId: storeDetails.storeId },
+        ],
+      },
       include: { prices: true },
     });
 

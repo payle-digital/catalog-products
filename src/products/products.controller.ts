@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
   Query,
-  Request,
+  Req,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -19,25 +19,21 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(
-    @Body() createProductDto: CreateProductDto,
-    @Request() req: any) {
-    const apiKey = req.headers['secret_key'];
-    return this.productsService.create(createProductDto, apiKey);
+  create(@Body() createProductDto: CreateProductDto, @Req() req: any) {
+    return this.productsService.create(createProductDto, req.store);
   }
 
   @Get()
   async findAll(
     @Query() query: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<ProductListResponse> {
-    const apiKey = req.headers['secret_key'];
-    return await this.productsService.findAll(query, apiKey);
+    return await this.productsService.findAll(query, req.store);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(id);
+  findOne(@Param('id') id: string, @Req() req: any) {
+    return this.productsService.findOne(id, req.store);
   }
 
   @Patch(':id')

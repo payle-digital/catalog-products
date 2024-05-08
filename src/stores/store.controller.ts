@@ -7,7 +7,9 @@ export class StoresController {
   constructor(private readonly storesService: StoresService) {}
 
   @EventPattern('STORE_CREATED')
-  async createStore(@Payload() message) {
-    await this.storesService.create(message.id, message.apiKey);
+  async create(@Payload() message) {
+    console.log(message);
+    if (!message.storeId) return;
+    await this.storesService.create(message.storeId);
   }
 }
