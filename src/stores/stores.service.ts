@@ -5,13 +5,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class StoresService {
   constructor(private prisma: PrismaService) {}
 
-  async create(storeId: string) {
-    const store = await this.prisma.store.findFirst({ where: { id: storeId } });
+  async create(id: string) {
+    const store = await this.prisma.store.findFirst({ where: { id } });
     if (store) return;
     await this.prisma.store.create({
-      data: {
-        id: storeId,
-      },
+      data: { id },
     });
   }
 }

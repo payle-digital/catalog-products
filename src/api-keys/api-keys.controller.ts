@@ -8,6 +8,7 @@ export class ApiKeysController {
 
   @EventPattern('APIKEY_CREATED')
   async create(@Payload() message) {
+    if (!message.id) return;
     await this.apiKeysService.create(message);
   }
 }

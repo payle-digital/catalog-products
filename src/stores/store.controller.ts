@@ -8,8 +8,7 @@ export class StoresController {
 
   @EventPattern('STORE_CREATED')
   async create(@Payload() message) {
-    console.log(message);
-    if (!message.storeId) return;
-    await this.storesService.create(message.storeId);
+    if (!message.id) return;
+    await this.storesService.create(message.id);
   }
 }
