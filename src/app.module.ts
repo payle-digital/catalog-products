@@ -9,6 +9,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProductsController } from './products/products.controller';
 import { ProductsModule } from './products/products.module';
 import { StoresModule } from './stores/stores.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { StoresModule } from './stores/stores.module';
     StoresModule,
     ApiKeysModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [ApiKeysService],
 })
 export class AppModule implements NestModule {
