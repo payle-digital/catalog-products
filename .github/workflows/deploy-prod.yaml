@@ -2,10 +2,7 @@ name: Build and Push catalog-products Image to AWS ECR
 on:
   pull_request:
     branches:
-      - dev
-permissions:
-  id-token: write
-  contents: read 
+      - main
 
 jobs:
   build-and-push:
@@ -30,7 +27,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: payle-catalog-products-dev
+        ECR_REPOSITORY: payle-catalog-products-prod
         IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .

@@ -5,21 +5,17 @@ import {
   IsInt,
   IsJSON,
   IsOptional,
-  IsString,
   Min,
   ValidateIf,
 } from 'class-validator';
 
-export class CreatePriceDto {
+export class CreatePriceWithProductDto {
   @IsEnum(Currency)
   currency: Currency;
 
   @IsBoolean()
   @IsOptional()
   active: boolean = true;
-
-  @IsString()
-  productId: string;
 
   @ValidateIf((o) => o.type === PriceType.recurring)
   @IsJSON()

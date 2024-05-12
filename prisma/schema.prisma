@@ -38,7 +38,7 @@ model Price {
   currency Currency
   type PriceType
   unitAmount Int? @map("unit_amount")
-  recurring Json
+  recurring Json?
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String @map("product_id")

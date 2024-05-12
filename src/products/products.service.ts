@@ -21,7 +21,11 @@ export class ProductsService {
       data: {
         id: `prod_${generateRandomId(14)}`,
         livemode: storeDetails.livemode,
-        ...createProductDto,
+        name: createProductDto.name,
+        description: createProductDto.description,
+        features: createProductDto.features,
+        images: createProductDto.images,
+        active: createProductDto.active,
         prices: {
           create: {
             id: `price_${generateRandomId(14)}`,
@@ -36,6 +40,7 @@ export class ProductsService {
           connect: { id: storeDetails.storeId },
         },
       },
+      include: { prices: true },
     });
 
     return product;

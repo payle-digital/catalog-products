@@ -1,11 +1,14 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
+  IsDefined,
   IsOptional,
   IsString,
   MaxLength,
+  ValidateNested,
 } from 'class-validator';
-import { CreatePriceDto } from 'src/prices/dto/create-price.dto';
+import { CreatePriceWithProductDto } from 'src/prices/dto/create-price-with-product.dto';
 
 export class CreateProductDto {
   @IsOptional()
@@ -28,6 +31,8 @@ export class CreateProductDto {
   @IsArray()
   images?: string[];
 
-  @IsOptional()
-  default_price_data?: CreatePriceDto;
+  @IsDefined({ message: 'default_price_data is missing' })
+  @Type(() => CreatePriceWithProductDto)
+  @ValidateNested()
+  default_price_data: CreatePriceWithProductDto;
 }
